@@ -26,21 +26,35 @@ class UserController extends Controller {
                 break;
             case 'PATCH':
                 $data = (array) json_decode(file_get_contents("php://input"), true);
-                $errors = $this->getValidationErrors($data);
+                $errors = $this->getValidationErrors($data, false);
                 if( ! empty($errors) ) {
                     http_response_code(422);
                     echo json_encode(['errors' => $errors]);
                     break; 
                 }
                 $rows = $this->userModel->update($user ,$data);
+                if($rows == 0) {
+                    echo json_encode([
+                        'message' => "No new update",
+                        'rows' => $rows
+                    ]);
+                    break; 
+                }
                 echo json_encode([
                     'message' => "User $id updated",
                     'rows' => $rows
                 ]);
                 break;
+            case 'DELETE':
+                $rows = $this->userModel->delete($id);
+                echo json_encode([
+                    'message' => "User $id deleted",
+                    'rows' => $rows
+                ]);
+                break;
             default:
                 http_response_code(405);
-                header("Allow: GET, POST");
+                header("Allow: GET, PATCH, DELETE");
         }
         
     }
@@ -70,13 +84,13 @@ class UserController extends Controller {
                 header("Allow: GET, POST");
         }
     }
-    private function getValidationErrors(array $data) : array
+    private function getValidationErrors(array $data, bool $isNew = true) : array
     {
         $errors = [];
         $dataElements = array_keys($data);
         foreach ($dataElements as $element)
         {
-            if(empty($data[$element]))
+            if( $isNew && empty($data[$element]))
                 $errors[$element] = $element . " is required";
         }
         // $dataElements = ["last name", "first name", "birth date", "nationality", "family situation", "address", "visa type", "start date", "end date", "travel type"];

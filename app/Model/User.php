@@ -75,4 +75,14 @@ class User extends DataBase
         $statement->execute();
         return $statement->rowCount();
     }
+
+    public function delete(string $id) : int 
+    {
+        $sql = "DELETE FROM user
+                WHERE id = :id ;";
+        $statement = $this->connection->prepare($sql);
+        $statement->bindValue(':id', $id, PDO::PARAM_INT);
+        $statement->execute();
+        return $statement->rowCount();
+    }
 }
