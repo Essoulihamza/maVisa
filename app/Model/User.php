@@ -16,20 +16,20 @@ class User extends DataBase
     public function create(array $data) : string
     {
         $sql = "INSERT INTO `user` 
-        (`last name`, `first name`, `birth date`, `nationality`, `family situation`, `address`, `visa type`, `start date`, `end date`, `travel type`, `travel number`)
-        VALUES (`:last name`, `:first name`, `:birth date`, `:nationality`, `:family situation`, `:address`, `:visa type`, `:start date`, `:end date`, `:travel type`, `:travel number`);";
+        ( `last name`, `first name`, `birth date`, `nationality`, `family situation`, `address`, `visa type`, `start date`, `end date`, `travel type`, `travel number`)
+        VALUES (:last_name, :first_name, :birth_date, :nationality, :family_situation, :address, :visa_type, :start_date, :end_date, :travel_type, :travel_number);";
         $statement = $this->connection->prepare($sql);
-        $statement->bindParam('last name', $data['last name']);
-        $statement->bindParam('first name', $data['first name']);
-        $statement->bindParam('birth date', $data['birth date']);
-        $statement->bindParam('nationality', $data['nationality']);
-        $statement->bindParam('family situation', $data['family situation']);
-        $statement->bindParam('address', $data['address']);
-        $statement->bindParam('visa type', $data['visa type']);
-        $statement->bindParam('start date', $data['start date']);
-        $statement->bindParam('end date', $data['end date']);
-        $statement->bindParam('travel type', $data['travel type']);
-        $statement->bindParam('travel number', $data['travel number']);
+        $statement->bindParam(':last_name', $data['last name']);
+        $statement->bindParam(':first_name', $data['first name']);
+        $statement->bindParam(':birth_date', $data['birth date']);
+        $statement->bindParam(':nationality', $data['nationality']);
+        $statement->bindParam(':family_situation', $data['family situation']);
+        $statement->bindParam(':address', $data['address']);
+        $statement->bindParam(':visa_type', $data['visa type']);
+        $statement->bindParam(':start_date', $data['start date']);
+        $statement->bindParam(':end_date', $data['end date']);
+        $statement->bindParam(':travel_type', $data['travel type']);
+        $statement->bindParam(':travel_number', $data['travel number']);
         $statement->execute();
         return $this->connection->lastInsertId();
     }

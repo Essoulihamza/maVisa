@@ -65,7 +65,7 @@ class UserController extends Controller {
                 print_r(json_encode($this->userModel->getAll()));
                 break;
             case 'POST':
-                $data = (array) json_decode(file_get_contents("php://input"), true);
+                $data = (array) json_decode(file_get_contents("php://input"));
                 $errors = $this->getValidationErrors($data);
                 if( ! empty($errors) ) {
                     http_response_code(422);
@@ -88,32 +88,16 @@ class UserController extends Controller {
     {
         $errors = [];
         $dataElements = array_keys($data);
+        if(count($dataElements) < 11 && $isNew) {
+            $errors['data count error'] = "all data are required";
+            return $errors;
+        }
         foreach ($dataElements as $element)
         {
-            if( $isNew && empty($data[$element]))
+            $data[$element] = Validation::dataValidation($data[$element]);
+            if( $isNew &&  empty($data[$element]) )
                 $errors[$element] = $element . " is required";
         }
-        // $dataElements = ["last name", "first name", "birth date", "nationality", "family situation", "address", "visa type", "start date", "end date", "travel type"];
-        // if (empty($data['last name']))
-        //     $errors['last name'] = "last name is required";
-        // if (empty($data['first name']))
-        //     $errors['first name'] = "first name is required";
-        // if (empty($data['birth date']))
-        //     $errors['birth date'] = "birth date  is required";
-        // if (empty($data['nationality']))
-        //     $errors['nationality'] = "nationality  is required";
-        // if (empty($data['family situation']))
-        //     $errors['family situation'] = "family situation  is required";
-        // if (empty($data['address']))
-        //     $errors['address'] = "address  is required";
-        // if (empty($data['visa type']))
-        //     $errors['visa type'] = "visa type  is required";
-        // if (empty($data['start date']))
-        //     $errors['start date'] = "start date  is required";
-        // if (empty($data['end date']))
-        //     $errors['end date'] = "end date  is required";
-        // if (empty($data['travel type']))
-        //     $errors['travel type'] = "travel type  is required";
         return $errors;
     }
 
