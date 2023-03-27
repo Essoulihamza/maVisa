@@ -1,6 +1,6 @@
 <?php
 class Application {
-    private $controller = "PageController";
+    private $controller = "UserController";
     private $action = "processRequest";
     private $params = [];
 
@@ -18,15 +18,11 @@ class Application {
     protected function prepareURL() {
         
         $request = trim($_SERVER['REQUEST_URI'], '/');
-        
-        if(!empty($request)) {
-        
-            $url = explode('/', $request);
-            $this->controller = isset($url[0]) ? $url[0] . "Controller" : "PageController";
-            unset($url[0]);
-            $url = !empty($url) ? array_values($url) : [];
-            array_unshift($url, $_SERVER['REQUEST_METHOD']);
-            $this->params = $url;
-        }
+                        $url = explode('/', $request);
+                        $this->controller = isset($url[0]) ? $url[0] . "Controller" : "UserController";
+                        unset($url[0]);
+                        $url = !empty($url) ? array_values($url) : [];
+                        array_unshift($url, $_SERVER['REQUEST_METHOD']);
+                        $this->params = $url;
     }
 }

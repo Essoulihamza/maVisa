@@ -10,5 +10,6 @@ set_include_path(ROOT . PATH_SEPARATOR . implode(PATH_SEPARATOR, $modules));
 spl_autoload_register('spl_autoload');
 set_error_handler("ErrorHandler::handleError");
 set_exception_handler("ErrorHandler::handleException");
-header("Content-type: application/json; charset:UTF-8");
+header("Content-type: application/json; charset: UTF-8;");
+header('Access-Control-Allow-Origin: *');
 new Application();

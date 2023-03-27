@@ -1,9 +1,12 @@
 <?php 
 class UserController extends Controller {
+    use JWT;
     private $userModel;
+    private $tokenModel;
     public function __construct()
     {
         $this->userModel = $this->model('User');
+        $this->tokenModel = $this->model('Token');
     }
     public function processRequest(string $method, ?int $id = 0) : void 
     {
@@ -65,7 +68,7 @@ class UserController extends Controller {
                 print_r(json_encode($this->userModel->getAll()));
                 break;
             case 'POST':
-                $data = (array) json_decode(file_get_contents("php://input"));
+                $data = json_decode( file_get_contents("php://input"), true);
                 $errors = $this->getValidationErrors($data);
                 if( ! empty($errors) ) {
                     http_response_code(422);
@@ -73,10 +76,16 @@ class UserController extends Controller {
                     break; 
                 }
                 $id = $this->userModel->create($data);
+                $payload = [
+                    'user_id' => $id
+                ];
+                $jwt = $this->generate($payload);
+                $this->tokenModel->insert($jwt, $id);
                 http_response_code(201);
                 echo json_encode([
                     'message' => "User created successfully",
-                    'id' => $id
+                    'id' => $id,
+                    'token' => $jwt
                 ]);
                 break;
             default:
@@ -89,7 +98,7 @@ class UserController extends Controller {
         $errors = [];
         $dataElements = array_keys($data);
         if(count($dataElements) < 11 && $isNew) {
-            $errors['data count error'] = "all data are required";
+            $errors['data-errors'] = "all data are required";
             return $errors;
         }
         foreach ($dataElements as $element)
@@ -100,5 +109,4 @@ class UserController extends Controller {
         }
         return $errors;
     }
-
 }

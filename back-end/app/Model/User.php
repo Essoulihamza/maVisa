@@ -9,27 +9,27 @@ class User extends DataBase
     public function getAll() : array 
     {
         $sql = "SELECT * 
-                FROM user";
+                FROM users";
         $statement = $this->connection->query($sql);
         return $statement->fetchAll();
     }
     public function create(array $data) : string
     {
-        $sql = "INSERT INTO `user` 
-        ( `last name`, `first name`, `birth date`, `nationality`, `family situation`, `address`, `visa type`, `start date`, `end date`, `travel type`, `travel number`)
-        VALUES (:last_name, :first_name, :birth_date, :nationality, :family_situation, :address, :visa_type, :start_date, :end_date, :travel_type, :travel_number);";
+        $sql = "INSERT INTO `users` 
+                (`first-name`, `last-name`, `birthdate`, `nationality`, `family-situation`, `address`, `departure-date`, `arrival-date`, `visa-type`, `document-type`, `document-number`) 
+                VALUES (:first_name , :last_name , :birthdate , :nationality, :family_situation , :address, :departure_date, :arrival_date , :visa_type , :document_type , :document_number );";
         $statement = $this->connection->prepare($sql);
-        $statement->bindParam(':last_name', $data['last name']);
-        $statement->bindParam(':first_name', $data['first name']);
-        $statement->bindParam(':birth_date', $data['birth date']);
+        $statement->bindParam(':last_name', $data['lastName']);
+        $statement->bindParam(':first_name', $data['firstName']);
+        $statement->bindParam(':birthdate', $data['birthdate']);
         $statement->bindParam(':nationality', $data['nationality']);
-        $statement->bindParam(':family_situation', $data['family situation']);
+        $statement->bindParam(':family_situation', $data['familySituation']);
         $statement->bindParam(':address', $data['address']);
-        $statement->bindParam(':visa_type', $data['visa type']);
-        $statement->bindParam(':start_date', $data['start date']);
-        $statement->bindParam(':end_date', $data['end date']);
-        $statement->bindParam(':travel_type', $data['travel type']);
-        $statement->bindParam(':travel_number', $data['travel number']);
+        $statement->bindParam(':visa_type', $data['visaType']);
+        $statement->bindParam(':departure_date', $data['departure']);
+        $statement->bindParam(':arrival_date', $data['arrival']);
+        $statement->bindParam(':document_type', $data['documentType']);
+        $statement->bindParam(':document_number', $data['documentNumber']);
         $statement->execute();
         return $this->connection->lastInsertId();
     }
@@ -37,7 +37,7 @@ class User extends DataBase
     public function get(string $id) : array | false
     {
         $sql = "SELECT * 
-                FROM user
+                FROM users
                 WHERE id = :id ;";
         $statement = $this->connection->prepare($sql);
         $statement->bindParam('id', $id, PDO::PARAM_INT);
@@ -46,7 +46,7 @@ class User extends DataBase
     }
     public function update(array $current, array $new ) : int
     {
-        $sql = "UPDATE `user` 
+        $sql = "UPDATE `users` 
                 SET `last name` = :last_name,
                     `first name` = :first_name,
                     `birth date` = :birth_date,
@@ -60,17 +60,17 @@ class User extends DataBase
                     `travel number` = :travel_number
                 WHERE `user`.`id` = :id ;";
         $statement = $this->connection->prepare($sql);
-        $statement->bindvalue('last_name', $new['last name'] ?? $current['last name'], PDO::PARAM_STR);
-        $statement->bindvalue('first_name', $new['first name'] ?? $current['first name']);
-        $statement->bindvalue('birth_date', $new['birth date'] ?? $current['birth date']);
+        $statement->bindvalue('last_name', $new['lastName'] ?? $current['lastName'], PDO::PARAM_STR);
+        $statement->bindvalue('first_name', $new['firstName'] ?? $current['firstName']);
+        $statement->bindvalue('birth_date', $new['birthdate'] ?? $current['birthdate']);
         $statement->bindvalue('nationality', $new['nationality'] ?? $current['nationality']);
-        $statement->bindvalue('family_situation', $new['family situation'] ?? $current['family situation']);
+        $statement->bindvalue('family_situation', $new['familySituation'] ?? $current['familySituation']);
         $statement->bindvalue('address', $new['address'] ?? $current['address']);
-        $statement->bindvalue('visa_type', $new['visa type'] ?? $current['visa type']);
-        $statement->bindvalue('start_date', $new['start date'] ?? $current['start date']);
-        $statement->bindvalue('end_date', $new['end date'] ?? $current['end date']);
-        $statement->bindvalue('travel_type', $new['travel type'] ?? $current['travel type']);
-        $statement->bindvalue('travel_number', $new['travel number'] ?? $current['travel number']);
+        $statement->bindvalue('visa_type', $new['visaType'] ?? $current['visaType']);
+        $statement->bindvalue('start_date', $new['departure'] ?? $current['departure']);
+        $statement->bindvalue('end_date', $new['arrival'] ?? $current['arrival']);
+        $statement->bindvalue('travel_type', $new['documentType'] ?? $current['documentType']);
+        $statement->bindvalue('travel_number', $new['documentNumber'] ?? $current['documentNumber']);
         $statement->bindValue(':id', $current['id'], PDO::PARAM_INT);
         $statement->execute();
         return $statement->rowCount();
