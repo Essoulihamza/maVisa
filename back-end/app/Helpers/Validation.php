@@ -8,5 +8,4 @@ class validation
         $data = htmlspecialchars($data);
         return $data;
     }
-
 }

@@ -3,9 +3,10 @@ module.exports = {
   content: ['./src/*.vue',
             './src/*/*.vue',
             './src/*/*/*.vue',
-            './index.html'],
+            './index.html',
+          './node_modules/tw-elements/dist/js/**/*.js'],
   theme: {
     extend: {},
   },
-  plugins: [],
+  plugins: [require("tw-elements/dist/plugin")]
 }

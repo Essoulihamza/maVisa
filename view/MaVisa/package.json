@@ -9,6 +9,11 @@
     "preview": "vite preview"
   },
   "dependencies": {
+    "@vuelidate/core": "^2.0.1",
+    "@vuelidate/validators": "^2.0.1",
+    "pinia": "^2.0.33",
+    "tailwind": "^4.0.0",
+    "tw-elements": "^1.0.0-beta1",
     "vue": "^3.2.45",
     "vue-router": "^4.1.6"
   },

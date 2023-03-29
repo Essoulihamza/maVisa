@@ -1,32 +1,29 @@
 <?php 
-class UserController extends Controller {
+class ReservationClass extends Controller {
     use JWT;
-    private $userModel;
+    private $reservationModel;
     private $tokenModel;
-    public function __construct()
-    {
-        $this->userModel = $this->model('User');
-        $this->tokenModel = $this->model('Token');
+    public function __construct(){
+        $this->reservationModel = $this->model('reservation');
     }
     public function processRequest(string $method, ?int $id = 0) : void 
     {
-        if( $id )
-            $this->processResourceRequest($method, $id);
+        if($id) $this->processResourceRequest($method, $id);
         else
             $this->processCollectionRequest($method);
     }
     private function processResourceRequest(string $method, string $id) : void
     {
-        $user = $this->userModel->get($id);
+        $reservation = $this->reservationModel->get($id);
 
-        if( ! $user ){
+        if( ! $reservation ){
             http_response_code(404);
             echo json_encode(['message' => "User not found"]);
             return;
         }
         switch($method) {
             case 'GET':
-                echo json_encode($user);
+                echo json_encode($reservation);
                 break;
             case 'PATCH':
                 $data = (array) json_decode(file_get_contents("php://input"), true);
@@ -36,7 +33,7 @@ class UserController extends Controller {
                     echo json_encode(['errors' => $errors]);
                     break; 
                 }
-                $rows = $this->userModel->update($user ,$data);
+                $rows = $this->reservationModel->update($reservation ,$data);
                 if($rows == 0) {
                     echo json_encode([
                         'message' => "No new update",
@@ -50,7 +47,7 @@ class UserController extends Controller {
                 ]);
                 break;
             case 'DELETE':
-                $rows = $this->userModel->delete($id);
+                $rows = $this->reservationModel->delete($id);
                 echo json_encode([
                     'message' => "User $id deleted",
                     'rows' => $rows
@@ -62,11 +59,12 @@ class UserController extends Controller {
         }
         
     }
+
     private function processCollectionRequest(string $method) : void
     {
         switch($method) {
             case 'GET':
-                print_r(json_encode($this->userModel->getAll()));
+                print_r(json_encode($this->reservationModel->getAll()));
                 break;
             case 'POST':
                 $data = json_decode( file_get_contents("php://input"), true);
@@ -76,18 +74,9 @@ class UserController extends Controller {
                     echo json_encode(['errors' => $errors]);
                     break; 
                 }
-                $id = $this->userModel->create($data);
+                $id = $this->reservationModel->store($data);
                 $payload = [
-                    'User' => [
-                        'firstName' => $id,
-                        'lastName' => $id,
-                        'birthdate' => $id,
-                        'familySituation' => $id,
-                        'nationality' => $id,
-                        'address' => $id,
-                        '' => $id,
-
-                    ]
+                    'user_id' => $id
                 ];
                 $jwt = $this->generate($payload);
                 $this->tokenModel->insert($jwt, $id);
@@ -103,5 +92,4 @@ class UserController extends Controller {
                 header("Allow: GET, POST");
         }
     }
-    
 }

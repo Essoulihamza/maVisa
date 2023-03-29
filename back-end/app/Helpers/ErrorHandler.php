@@ -23,4 +23,20 @@ class ErrorHandler
     {
         throw new ErrorException($errstr, 0, $errno, $errfile, $errline);
     }
+    public static function getValidationErrors(array $data, bool $isNew = true) : array
+    {
+        $errors = [];
+        $dataElements = array_keys($data);
+        if(count($dataElements) < 11 && $isNew) {
+            $errors['data-errors'] = "all data are required";
+            return $errors;
+        }
+        foreach ($dataElements as $element)
+        {
+            $data[$element] = Validation::dataValidation($data[$element]);
+            if( $isNew &&  empty($data[$element]) )
+                $errors[$element] = $element . " is required";
+        }
+        return $errors;
+    }
 }

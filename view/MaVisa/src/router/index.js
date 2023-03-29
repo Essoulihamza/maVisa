@@ -1,22 +1,29 @@
+import {createRouter, createWebHistory} from 'vue-router'
+import Home from '@/views/Home.vue'
+import Regester from '@/views/Regester.vue'
+import Tracking from '@/views/Tracking.vue'
 
-const router = createRouter({
+
+export const router = createRouter({
     history: createWebHistory(),
     routes: [
         {
             path: '/',
             name: 'Home',
-            component: HomeView
+            component: Home
         },
         {
             path: '/Regester',
             name: 'Regester',
-            component: RegesterView
+            component: Regester
         },
         {
             path: '/Tracking',
             name: 'Tracking',
-            component: TrackingView
+            component: Tracking
         }
 
     ]
 })
+
+
