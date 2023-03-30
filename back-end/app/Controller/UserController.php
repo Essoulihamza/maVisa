@@ -77,24 +77,16 @@ class UserController extends Controller {
                     break; 
                 }
                 $id = $this->userModel->create($data);
+                $user = $this->userModel->get($id);
                 $payload = [
-                    'User' => [
-                        'firstName' => $id,
-                        'lastName' => $id,
-                        'birthdate' => $id,
-                        'familySituation' => $id,
-                        'nationality' => $id,
-                        'address' => $id,
-                        '' => $id,
-
-                    ]
+                    'User' => $user
                 ];
                 $jwt = $this->generate($payload);
                 $this->tokenModel->insert($jwt, $id);
                 http_response_code(201);
                 echo json_encode([
                     'message' => "User created successfully",
-                    'id' => $id,
+                    'userData' => $user,
                     'token' => $jwt
                 ]);
                 break;
