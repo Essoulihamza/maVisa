@@ -1,6 +1,6 @@
 import {createRouter, createWebHistory} from 'vue-router'
 import Home from '@/views/Home.vue'
-import Regester from '@/views/Regester.vue'
+import Register from '@/views/Register.vue'
 import Tracking from '@/views/Tracking.vue'
 
 
@@ -13,9 +13,9 @@ export const router = createRouter({
             component: Home
         },
         {
-            path: '/Regester',
-            name: 'Regester',
-            component: Regester
+            path: '/Register',
+            name: 'Register',
+            component: Register
         },
         {
             path: '/Tracking',

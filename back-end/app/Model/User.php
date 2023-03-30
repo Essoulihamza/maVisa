@@ -9,14 +9,14 @@ class User extends DataBase
     public function getAll() : array 
     {
         $sql = "SELECT * 
-                FROM users";
+                FROM user";
         $statement = $this->connection->query($sql);
         return $statement->fetchAll();
     }
     public function create(array $data) : string
     {
-        $sql = "INSERT INTO `users` 
-                (`first-name`, `last-name`, `birthdate`, `nationality`, `family-situation`, `address`, `departure-date`, `arrival-date`, `visa-type`, `document-type`, `document-number`) 
+        $sql = "INSERT INTO `user` 
+                (`firstName`, `lastName`, `birthdate`, `nationality`, `familySituation`, `address`, `departureDate`, `arrivalDate`, `visaType`, `documentType`, `documentNumber`) 
                 VALUES (:first_name , :last_name , :birthdate , :nationality, :family_situation , :address, :departure_date, :arrival_date , :visa_type , :document_type , :document_number );";
         $statement = $this->connection->prepare($sql);
         $statement->bindParam(':last_name', $data['lastName']);
@@ -37,7 +37,7 @@ class User extends DataBase
     public function get(string $id) : array | false
     {
         $sql = "SELECT * 
-                FROM users
+                FROM user
                 WHERE id = :id ;";
         $statement = $this->connection->prepare($sql);
         $statement->bindParam('id', $id, PDO::PARAM_INT);
@@ -46,18 +46,18 @@ class User extends DataBase
     }
     public function update(array $current, array $new ) : int
     {
-        $sql = "UPDATE `users` 
-                SET `last name` = :last_name,
-                    `first name` = :first_name,
-                    `birth date` = :birth_date,
+        $sql = "UPDATE `user` 
+                SET `lastName` = :last_name,
+                    `firstName` = :first_name,
+                    `birthdate` = :birth_date,
                     `nationality` = :nationality,
-                    `family situation` = :family_situation,
+                    `familySituation` = :family_situation,
                     `address` = :address,
-                    `visa type` = :visa_type,
-                    `start date` = :start_date,
-                    `end date` = :end_date,
-                    `travel type` = :travel_type,
-                    `travel number` = :travel_number
+                    `visaType` = :visa_type,
+                    `arrivalDate` = :start_date,
+                    `departureDate` = :end_date,
+                    `documentType` = :travel_type,
+                    `documentNumber` = :travel_number
                 WHERE `user`.`id` = :id ;";
         $statement = $this->connection->prepare($sql);
         $statement->bindvalue('last_name', $new['lastName'] ?? $current['lastName'], PDO::PARAM_STR);
